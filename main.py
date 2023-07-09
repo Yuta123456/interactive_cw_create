@@ -20,9 +20,10 @@ dataset = ImageStruct(annotation_file, tensor_file)
 print('データセット初期化終了')
 # ユーザに表示して、気に入ったアイテムをいくつか選んでもらう
 category_list = ["tops", "bottoms", "shoes"]
-favorite_items = {}
+required_items = {}
+initial_items = {}
 for c in category_list:
-    favorite_items[c] = []
+    required_items[c] = []
     # 好きな単語をいくつか入力してもらう
     favorite_word = input(f"{c} を選びます。単語をスペース区切りで入力してください: ")
     print(f'{favorite_word} に基づき、画像検索を行います。')
@@ -39,12 +40,16 @@ for c in category_list:
     for fashion_item in fashion_items:
         img_path, item_id = fashion_item.img_path, fashion_item.item_id
         if item_id in favorite_item_set:
-            favorite_items[c].append(FashionItem(img_path))
+            required_items[c].append(FashionItem(img_path))
+    if len(required_items[c]) == 0:
+        # マジックナンバー
+        initial_items[c] = fashion_items[:4]
+
 
 # CWを構築
 print("与えられた情報をもとにCWを構築しています。")
 
-cw = create_cw(favorite_items, dataset)
+cw = create_cw(required_items, dataset, initial_items)
 image = create_cw_image(cw)
 image.show()
 print("生成されたcwがこちらです")

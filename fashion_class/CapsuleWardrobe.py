@@ -7,11 +7,11 @@ import heapq
 from fashion_class.ImageStruct import ImageStruct
 
 class CapsuleWardrobe():
-    def __init__(self, required_item: dict[str, list[FashionItem]] = None, max_length=4):
+    def __init__(self, initial_items: dict[str, list[FashionItem]], required_item: dict[str, list[FashionItem]] = None, max_length=4):
         # randomに初期化嚙ませてあげる
-        self.tops = []
-        self.bottoms = []
-        self.shoes = []
+        self.tops = initial_items["tops"]
+        self.bottoms = initial_items["bottoms"]
+        self.shoes = initial_items["shoes"]
         self.coordinates = []
         self.score = 0
         self.max_length = max_length
