@@ -90,7 +90,7 @@ class CapsuleWardrobe():
         self.shoes = [s[1] for s in heap]
 
     def calc_score_increase(self, items):
-        score = random.random()
+        score = 0
         for t in items["tops"]:
             for b in items["bottoms"]:
                 for s in items["shoes"]:
