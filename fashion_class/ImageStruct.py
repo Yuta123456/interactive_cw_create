@@ -1,7 +1,5 @@
 import os
 import pandas as pd
-import numpy as np
-from PIL import Image
 from category import get_image_category
 import torch
 
