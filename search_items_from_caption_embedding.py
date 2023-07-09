@@ -3,13 +3,14 @@ import heapq
 # from ImageStruct import ImageStruct
 from category import get_item_id
 import torch
+from fashion_class.FashionItem import FashionItem
 
 from fashion_class.ImageStruct import ImageStruct
 
 """
 与えられたベクトルから、画像を検索する
 """
-def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=10000):
+def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=10000)-> list[FashionItem]:
     heap = []
     for i in range(limit):
         if i % 100 == 0:
@@ -29,5 +30,6 @@ def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=10000)
         heapq.heappush(heap, (-dist.item(), t_img_path, t_id))
         if len(heap) > 10:
             heapq.heappop(heap)
-    return heap
+    fashion_items = [FashionItem(i[1]) for i in heap]
+    return fashion_items
     

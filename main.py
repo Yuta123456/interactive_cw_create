@@ -1,4 +1,5 @@
 from create_cw import create_cw
+from create_fashion_items_image import create_cw_image, create_fashion_items_image
 from embedding_word import get_embedding_word
 from fashion_class.FashionItem import FashionItem
 from fashion_class.ImageStruct import ImageStruct
@@ -30,10 +31,12 @@ for c in category_list:
 
     # imagesは、このような形式
     # (-score, t_img_path, t_id)
-    images = search_items_from_caption_embedding(caption_embedding, dataset)
+    fashion_items = search_items_from_caption_embedding(caption_embedding, dataset)
 
+    image = create_fashion_items_image(fashion_items)
+    image.show()
     favorite_item_set = set(input(f'気に入った {c} アイテムのidをスペース区切りで入力してください').split())
-    for _score, img_path, item_id in images:
+    for _score, img_path, item_id in fashion_items:
         if item_id in favorite_item_set:
             favorite_items[c].append(FashionItem(img_path))
 
@@ -41,7 +44,8 @@ for c in category_list:
 print("与えられた情報をもとにCWを構築しています。")
 
 cw = create_cw(favorite_items, dataset)
-
+image = create_cw_image(cw)
+image.show()
 print("生成されたcwがこちらです")
 
 # 画像を表示

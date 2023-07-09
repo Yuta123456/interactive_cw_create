@@ -95,3 +95,12 @@ class CapsuleWardrobe():
     def show_images(self):
         # TODO: implements
         return
+
+    def get_tops(self):
+        return self.required_tops + self.tops
+
+    def get_bottoms(self):
+        return self.required_bottoms + self.bottoms
+
+    def get_shoes(self):
+        return self.required_shoes + self.shoes
