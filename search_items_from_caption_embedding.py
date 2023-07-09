@@ -20,7 +20,7 @@ def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=10000)
         t_img_tensor, fashion_item = dataset.get(i)
 
         # 同じアイテムが入ってると寒いのではじく
-        heap_ids = [i.item_id for i in heap]
+        heap_ids = [i[1].item_id for i in heap]
         if fashion_item.item_id in heap_ids:
             continue
         # TODO: カテゴリに対して、意味ないものであればはじいてもいいかも。

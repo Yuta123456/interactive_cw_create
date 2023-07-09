@@ -1,4 +1,4 @@
-from create_cw import create_cw
+from CreateCW import create_cw
 from create_fashion_items_image import create_cw_image, create_fashion_items_image
 from embedding_word import get_embedding_word
 from fashion_class.FashionItem import FashionItem

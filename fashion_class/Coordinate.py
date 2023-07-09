@@ -1,3 +1,4 @@
+import random
 from fashion_class.FashionItem import FashionItem
 
 
@@ -7,7 +8,7 @@ class Coordinate():
         self.bottoms = bottoms
         self.shoes = shoes
         # compatibility計算
-        self.compatibility = 0
+        self.compatibility = random.random()
     
     def get_compatibility(self):
         return self.compatibility

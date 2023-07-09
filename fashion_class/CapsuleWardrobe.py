@@ -1,9 +1,14 @@
+
+import random
 from fashion_class.Coordinate import Coordinate
 from fashion_class.FashionItem import FashionItem
 import heapq
 
+from fashion_class.ImageStruct import ImageStruct
+
 class CapsuleWardrobe():
     def __init__(self, required_item: dict[str, list[FashionItem]] = None, max_length=4):
+        # randomに初期化嚙ませてあげる
         self.tops = []
         self.bottoms = []
         self.shoes = []
@@ -34,22 +39,22 @@ class CapsuleWardrobe():
         self.coordinates = coordinates
         return self.coordinates
 
-    def optimize(self, dataset):
+    def optimize(self, dataset: ImageStruct):
         pre_score = self.score
 
-        self.optimize_tops(dataset["tops"])
-        self.optimize_bottoms(dataset["bottoms"])
-        self.optimize_shoes(dataset["shoes"])
+        self.optimize_tops(dataset.tops)
+        self.optimize_bottoms(dataset.bottoms)
+        self.optimize_shoes(dataset.shoes)
         score = self.calc_self_cw_compatibility()
         return score - pre_score
     
-    def optimize_tops(self, dataset):
+    def optimize_tops(self, dataset :list[FashionItem]):
         heap = []
         items = {}
         items["bottoms"] = self.bottoms + self.required_bottoms
         items["shoes"] = self.shoes + self.required_shoes
         for t in dataset:
-            items["top"] = [t]
+            items["tops"] = [t]
             score = self.calc_score_increase(items)
             heapq.heappush(heap, (-score, t))
             if len(heap) + len(self.required_tops) > self.max_length:
@@ -69,7 +74,7 @@ class CapsuleWardrobe():
             heapq.heappush(heap, (-score, b))
             if len(heap) + len(self.required_bottoms) > self.max_length:
                 heapq.heappop(heap)
-        self.tops = [b[1] for b in heap]
+        self.bottoms = [b[1] for b in heap]
 
     def optimize_shoes(self, dataset):
         heap = []
@@ -82,13 +87,13 @@ class CapsuleWardrobe():
             heapq.heappush(heap, (-score, s))
             if len(heap) + len(self.required_shoes) > self.max_length:
                 heapq.heappop(heap)
-        self.tops = [s[1] for s in heap]
+        self.shoes = [s[1] for s in heap]
 
     def calc_score_increase(self, items):
-        score = 0
-        for t in items["top"]:
+        score = random.random()
+        for t in items["tops"]:
             for b in items["bottoms"]:
-                for s in items["bottoms"]:
+                for s in items["shoes"]:
                     score += Coordinate(t, b, s).get_compatibility()
         return score
     

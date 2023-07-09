@@ -9,7 +9,21 @@ class ImageStruct():
     def __init__(self, annotation_file, tensor_file):
         self.annotations = pd.read_csv(annotation_file)
         self.img_tensors = torch.load(tensor_file)
-    
+        self.tops = []
+        self.bottoms = []
+        self.shoes = []
+        for i in range(10000):
+            if i % 10 == 0:
+                progress = '=' * (i // 100) + ' ' * (100 - i // 100)
+                print(f'\r【{progress}】', end='')
+            item = self.get(i)[1]
+            if item.get_category() == "tops":
+                self.tops.append(item)
+            if item.get_category() == "bottoms":
+                self.bottoms.append(item)
+            if item.get_category() == "shoes":
+                self.shoes.append(item)
+        
     def __len__(self):
         return len(self.annotations)
 
@@ -19,17 +33,17 @@ class ImageStruct():
         img_path = self.annotations.iloc[idx, 0]
         fashion_item = FashionItem(img_path)
         return img_tensor, fashion_item
-    
+
     def get_tops(self):
-        tops: list[FashionItem] = [self.get(i)[0] for i in range(len(self)) if self.get(i)[0].get_category() == 'tops']
-        return tops
+        tops: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'tops']
+        return tops[:100]
     
     def get_bottoms(self):
-        tops: list[FashionItem] = [self.get(i)[0] for i in range(len(self)) if self.get(i)[0].get_category() == 'bottoms']
-        return tops
+        bottoms: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'bottoms']
+        return bottoms[:100]
 
     def get_shoes(self):
-        tops: list[FashionItem] = [self.get(i)[0] for i in range(len(self)) if self.get(i)[0].get_category() == 'shoes']
-        return tops
+        shoes: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'shoes']
+        return shoes[:100]
 
 
