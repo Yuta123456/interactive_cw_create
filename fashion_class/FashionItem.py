@@ -48,4 +48,16 @@ class FashionItem():
         self.item_info = get_image_info(img_path)
         self.item_id = self.item_info["itemId"]
         self.category = self.item_info["category x color"]
-    # このクラスで、カテゴリが何に属するかとか決めてあげたら楽
+    
+    def get_category(self):
+        garment = self.category.split(' × ')[0]
+        if garment in ["ジャケット", "トップス", "コート", "ニット", "タンクトップ", "ブラウス", "Tシャツ", "カーディガン", "ダウンジャケット", "パーカー"]:
+            return "tops"
+        
+        if garment in ['スカート', 'ロングスカート', "ロングパンツ"]:
+            return "bottoms"
+        
+        if garment in ["ブーツ", "パンプス", "スニーカー", "靴", "サンダル"]:
+            return "shoes"
+        
+        return "others"

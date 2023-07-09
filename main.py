@@ -31,12 +31,13 @@ for c in category_list:
 
     # imagesは、このような形式
     # (-score, t_img_path, t_id)
-    fashion_items = search_items_from_caption_embedding(caption_embedding, dataset)
+    fashion_items = search_items_from_caption_embedding(caption_embedding, dataset, limit=100)
 
     image = create_fashion_items_image(fashion_items)
     image.show()
     favorite_item_set = set(input(f'気に入った {c} アイテムのidをスペース区切りで入力してください').split())
-    for _score, img_path, item_id in fashion_items:
+    for fashion_item in fashion_items:
+        img_path, item_id = fashion_item.img_path, fashion_item.item_id
         if item_id in favorite_item_set:
             favorite_items[c].append(FashionItem(img_path))
 
