@@ -36,11 +36,9 @@ for c in category_list:
 
     image = create_fashion_items_image(fashion_items)
     image.show()
-    favorite_item_set = set(input(f'気に入った {c} アイテムのidをスペース区切りで入力してください').split())
-    for fashion_item in fashion_items:
-        img_path, item_id = fashion_item.img_path, fashion_item.item_id
-        if item_id in favorite_item_set:
-            required_items[c].append(FashionItem(img_path))
+    favorite_item_set = input(f'気に入った {c} アイテムのidをスペース区切りで入力してください').split()
+    for i in favorite_item_set:
+        required_items[c].append(FashionItem(fashion_items[i]))
     if len(required_items[c]) == 0:
         # マジックナンバー
         initial_items[c] = fashion_items[:4]

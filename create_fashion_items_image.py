@@ -31,14 +31,14 @@ def create_fashion_items_image(fashion_items: list[FashionItem]):
 
         input_image.paste(image, (x, y))
 
-        input_text = fashion_items[i].item_id
+        # input_text = fashion_items[i].item_id
         text_color = (0, 0, 0)  # テキストの色を黒に設定
         text_font = ImageFont.truetype("arial.ttf", 16, encoding='utf-8')  # テキストのフォントとサイズを設定
         draw = ImageDraw.Draw(input_image)
         # text_width, text_height = draw.textsize(input_text, font=text_font)
         text_x = x  + 20 # 右端から5ピクセルの余白を開ける
         text_y = y - 20  # 元画像の上部中央に配置する
-        draw.text((text_x, text_y), str(input_text), font=text_font, fill=text_color)
+        draw.text((text_x, text_y), str(i+1), font=text_font, fill=text_color)
     return input_image
 
 
