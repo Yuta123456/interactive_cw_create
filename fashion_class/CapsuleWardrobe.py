@@ -94,3 +94,4 @@ class CapsuleWardrobe():
     
     def show_images(self):
         # TODO: implements
+        return

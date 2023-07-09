@@ -9,11 +9,13 @@ from fashion_class.ImageStruct import ImageStruct
 """
 与えられたベクトルから、画像を検索する
 """
-def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=100000):
+def search_items_from_caption_embedding(word, dataset: ImageStruct, limit=10000):
     heap = []
     for i in range(limit):
-        # if i % 1000 == 0:
-        #     print(f"{i * 100 / limit} %")
+        if i % 100 == 0:
+            progress = i // (limit // 10)
+            pro_bar = "=" * progress + ' ' * (10 - progress)
+            print(f"\r[{pro_bar}] {(i * 100 / limit):.1f}%", end="")
         t_img_tensor, t_img_path, _, _ = dataset.get(i)
 
         # 同じアイテムが入ってると寒いのではじく

@@ -1,2 +1,4 @@
 anotation_new.csv
 resnet50_tensor.pt
+*.pyc
+*.pth
