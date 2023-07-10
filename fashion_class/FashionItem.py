@@ -53,7 +53,7 @@ class FashionItem():
         garment = self.category.split(' × ')[0]
         if garment in ["ジャケット", "トップス", "コート", "ニット", "タンクトップ", "ブラウス", "Tシャツ", "カーディガン", "ダウンジャケット", "パーカー"]:
             return "tops"
-        
+            # , "ショートパンツ"入れ忘れた
         if garment in ['スカート', 'ロングスカート', "ロングパンツ"]:
             return "bottoms"
         
