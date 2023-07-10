@@ -1,4 +1,5 @@
 import os
+import random
 import pandas as pd
 from category import get_image_category
 import torch
@@ -12,11 +13,12 @@ class ImageStruct():
         self.tops = []
         self.bottoms = []
         self.shoes = []
-        for i in range(10000):
+        init_item_length = 3000
+        for i in range(init_item_length):
             if i % 10 == 0:
-                progress = '=' * (i // 100) + ' ' * (100 - i // 100)
+                progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
                 print(f'\r【{progress}】', end='')
-            item = self.get(i)[1]
+            item = self.get(random.randint(0, len(self)))[1]
             if item.get_category() == "tops":
                 self.tops.append(item)
             if item.get_category() == "bottoms":

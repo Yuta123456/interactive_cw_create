@@ -32,7 +32,13 @@ for c in category_list:
 
     # imagesは、このような形式
     # (-score, t_img_path, t_id)
-    fashion_items = search_items_from_caption_embedding(caption_embedding, dataset, c, limit=100)
+    if c == "tops":
+        d = dataset.get_tops()
+    elif c == "bottoms":
+        d = dataset.get_bottoms()
+    elif c == "shoes":
+        d = dataset.get_shoes()
+    fashion_items = search_items_from_caption_embedding(caption_embedding, d)
 
     image = create_fashion_items_image(fashion_items)
     image.show()

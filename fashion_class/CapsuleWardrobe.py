@@ -8,7 +8,6 @@ from fashion_class.ImageStruct import ImageStruct
 
 class CapsuleWardrobe():
     def __init__(self, initial_items: dict[str, list[FashionItem]], required_item: dict[str, list[FashionItem]] = None, max_length=4):
-        # randomに初期化嚙ませてあげる
         self.tops = initial_items["tops"]
         self.bottoms = initial_items["bottoms"]
         self.shoes = initial_items["shoes"]
@@ -53,10 +52,11 @@ class CapsuleWardrobe():
         items = {}
         items["bottoms"] = self.bottoms + self.required_bottoms
         items["shoes"] = self.shoes + self.required_shoes
+
         for t in dataset:
             items["tops"] = [t]
             score = self.calc_score_increase(items)
-            heapq.heappush(heap, (-score, t))
+            heapq.heappush(heap, (score, t))
             if len(heap) + len(self.required_tops) > self.max_length:
                 heapq.heappop(heap)
         self.tops = [t[1] for t in heap]
@@ -71,7 +71,7 @@ class CapsuleWardrobe():
         for b in dataset:
             items["bottoms"] = [b]
             score = self.calc_score_increase(items)
-            heapq.heappush(heap, (-score, b))
+            heapq.heappush(heap, (score, b))
             if len(heap) + len(self.required_bottoms) > self.max_length:
                 heapq.heappop(heap)
         self.bottoms = [b[1] for b in heap]
@@ -84,7 +84,7 @@ class CapsuleWardrobe():
         for s in dataset:
             items["shoes"] = [s]
             score = self.calc_score_increase(items)
-            heapq.heappush(heap, (-score, s))
+            heapq.heappush(heap, (score, s))
             if len(heap) + len(self.required_shoes) > self.max_length:
                 heapq.heappop(heap)
         self.shoes = [s[1] for s in heap]
