@@ -7,13 +7,13 @@ import torch
 from fashion_class.FashionItem import FashionItem
 
 class ImageStruct():
-    def __init__(self, annotation_file, tensor_file):
+    def __init__(self, annotation_file, tensor_file, init_item_length = 3000):
         self.annotations = pd.read_csv(annotation_file)
         self.img_tensors = torch.load(tensor_file)
         self.tops = []
         self.bottoms = []
         self.shoes = []
-        init_item_length = 3000
+        
         for i in range(init_item_length):
             if i % 10 == 0:
                 progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
