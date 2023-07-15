@@ -115,7 +115,7 @@ class CapsuleWardrobe():
         return score
     
     def calc_versatility(self, items: list[FashionItem], new_item: FashionItem):
-        covered_cateogory = set([i.get_cover_category() for i in items])
+        covered_cateogory = {[i.get_cover_category() for i in items]}
         pre_score = len(covered_cateogory)
         covered_cateogory.add(new_item.get_category)
 

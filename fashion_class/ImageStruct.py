@@ -10,9 +10,9 @@ class ImageStruct():
     def __init__(self, annotation_file, tensor_file, init_item_length = 3000):
         self.annotations = pd.read_csv(annotation_file)
         self.img_tensors = torch.load(tensor_file)
-        self.tops = []
-        self.bottoms = []
-        self.shoes = []
+        self.tops: list[FashionItem] = []
+        self.bottoms: list[FashionItem] = []
+        self.shoes: list[FashionItem] = []
         
         for i in range(init_item_length):
             if i % 10 == 0:
@@ -37,15 +37,12 @@ class ImageStruct():
         return img_tensor, fashion_item
 
     def get_tops(self):
-        tops: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'tops']
-        return tops[:100]
+        return self.tops
     
     def get_bottoms(self):
-        bottoms: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'bottoms']
-        return bottoms[:100]
+        return self.bottoms
 
     def get_shoes(self):
-        shoes: list[FashionItem] = [self.get(i)[1] for i in range(len(self)) if self.get(i)[1].get_category() == 'shoes']
-        return shoes[:100]
+        return self.shoes
 
 
