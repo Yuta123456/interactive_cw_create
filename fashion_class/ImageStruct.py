@@ -33,7 +33,7 @@ class ImageStruct():
         # D:/M1/fashion/IQON/IQON3000\1000092\3933191/11258659_m.jpg, 2016　Autumn&Winter　e-MOOK掲載商品 宮田聡子さん NVY着用トレンドのラップデザインを、ミドル丈でレディにクラスアップさせたスカート。サイドフリンジが存在感のあるアクセントに。シンプルなトップスを合わせ、今季らしい着こなしを楽しんで。
         img_tensor = self.img_tensors[idx]
         img_path = self.annotations.iloc[idx, 0]
-        fashion_item = FashionItem(img_path)
+        fashion_item = FashionItem(img_path, img_tensor)
         return img_tensor, fashion_item
 
     def get_tops(self):

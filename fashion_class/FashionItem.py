@@ -1,3 +1,4 @@
+import torch
 from category import get_image_info
 
 # {
@@ -42,12 +43,16 @@ from category import get_image_info
 #     ]
 # },
 
+cluster_tensors = torch.load('../data/center_tensors.pt')
+
 class FashionItem():
-    def __init__(self, img_path: str):
+    def __init__(self, img_path: str, img_tensor):
         self.img_path = img_path
+        self.img_tensor = img_tensor
         self.item_info = get_image_info(img_path)
         self.item_id = self.item_info["itemId"]
         self.category = self.item_info["category x color"]
+        self.cover_category = None
     
     def get_category(self):
         garment = self.category.split(' × ')[0]
@@ -61,3 +66,19 @@ class FashionItem():
             return "shoes"
         
         return "others"
+    
+    def get_cover_category(self) -> int:
+        # cluster_tensors に対して距離を図り、一番近いもののラベルを返す
+        if self.cover_category:
+            return self.cover_category
+
+        X = self.img_tensor.expand(cluster_tensors.size())
+
+        # ユークリッド距離を計算します
+        distances = torch.sqrt(torch.sum((X - cluster_tensors) ** 2, dim=1))
+
+        # 最小距離のインデックスを見つけます
+        label = torch.argmin(distances).item()
+        self.cover_category = label
+        return label
+
