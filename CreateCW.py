@@ -5,8 +5,8 @@ from fashion_class.FashionItem import FashionItem
 from fashion_class.ImageStruct import ImageStruct
 import torch
 
-def create_cw(required_item: dict[str, list[FashionItem]], dataset, initial_items: dict[str, list[FashionItem]], eps=1e-2):
-    cw = CapsuleWardrobe(initial_items, required_item)
+def create_cw(required_item: dict[str, list[FashionItem]], dataset, initial_items: dict[str, list[FashionItem]], eps=1e-2, max_length=4):
+    cw = CapsuleWardrobe(initial_items, required_item, max_length=max_length)
     increase = eps + 1
     roop = 0
     while increase > eps:
