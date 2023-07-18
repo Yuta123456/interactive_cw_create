@@ -1,7 +1,5 @@
-
-
-from fashion_class.CapsuleWardrobe import CapsuleWardrobe
 from fashion_class.FashionItem import FashionItem
+from fashion_class.CapsuleWardrobe import CapsuleWardrobe
 from fashion_class.ImageStruct import ImageStruct
 import torch
 
@@ -21,7 +19,7 @@ def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: I
     items = {
         'tops': cw.tops,
         'bottoms': cw.bottoms,
-        'shoes': cw.shows
+        'shoes': cw.shoes
     }
     same_layer = []
     if kind == 'tops':
@@ -51,3 +49,29 @@ def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: I
             score = (distance + c + v, item)
     return score[1]
 
+def change_item_recommandation(cw: CapsuleWardrobe):
+    # 全てのアイテムが一つ多い
+    # 一番最後に推薦するアイテムが入っている
+    initial_items = {
+        'tops': cw.tops,
+        'bottoms': cw.bottoms,
+        'shoes': cw.shoes
+    }
+    remove_item_indexes = {
+        'tops':None, 
+        'bottoms': None,
+        'shoes': None
+    }
+
+    for k, category_list in zip(['tops', 'bottoms', 'shoes'], [cw.tops, cw.bottoms, cw.shoes]):
+        worst_item_score = (10e10, None)
+        for i, _ in enumerate(category_list):
+            copy_items = initial_items.copy()
+            copy_items[k].pop(i)
+            cw = CapsuleWardrobe(initial_items=copy_items)
+            cw_score = cw.calc_self_cw_compatibility() + cw.calc_self_cw_versatility()
+            if worst_item_score[0] > cw_score:
+                worst_item_score = (cw_score, i)
+        remove_item_indexes[k] = worst_item_score[1]
+    
+    return remove_item_indexes

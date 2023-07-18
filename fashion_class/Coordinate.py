@@ -2,7 +2,7 @@ from fashion_class.FashionItem import FashionItem
 import json
 from PIL import Image, ImageDraw, ImageFont
 
-with open('../data/tops_count.json', 'r', encoding='shift-jis') as f:
+with open('D:/M1/fashion/optimization/data/tops_count.json', 'r', encoding='shift-jis') as f:
     tops_compatibility = json.load(f)
 
 # with open('../data/bottoms_count.json', 'r', encoding='shift-jis') as f:

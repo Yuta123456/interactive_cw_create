@@ -56,13 +56,13 @@ class CapsuleWardrobe():
         self.optimize_tops(dataset.tops)
         self.optimize_bottoms(dataset.bottoms)
         self.optimize_shoes(dataset.shoes)
-        score = self.calc_self_cw_compatibility()
+        score = self.calc_self_cw_compatibility() + self.calc_self_cw_versatility()
         self.score = score
         # TODO
         return score - pre_score
     
     def optimize_tops(self, dataset :list[FashionItem]):
-        self.tops = []
+        self.tops = self.required_tops
         heap = []
         items = {}
         items["bottoms"] = self.bottoms + self.required_bottoms
@@ -82,7 +82,7 @@ class CapsuleWardrobe():
     
         
     def optimize_bottoms(self, dataset):
-        self.bottoms = []
+        self.bottoms = self.required_bottoms
         heap = []
         items = {}
         items["tops"] = self.tops + self.required_tops
@@ -99,7 +99,7 @@ class CapsuleWardrobe():
             self.bottoms.append(max(heap, key=lambda x: x[0])[1])
 
     def optimize_shoes(self, dataset):
-        self.shoes = []
+        self.shoes = self.required_shoes
         heap = []
         items = {}
         items["tops"] = self.tops + self.required_tops

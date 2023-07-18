@@ -10,18 +10,15 @@ from fashion_class.ImageStruct import ImageStruct
 """
 与えられたベクトルから、画像を検索する
 """
-def search_items_from_caption_embedding(word, dataset: list[FashionItem], limit=10000)-> list[FashionItem]:
+def search_items_from_caption_embedding(word, dataset: list[FashionItem],  limit=10000)-> list[FashionItem]:
     heap = []
     for i in range(limit):
         if i % 100 == 0:
             progress = i // (limit // 10)
             pro_bar = "=" * progress + ' ' * (10 - progress)
             print(f"\r[{pro_bar}] {(i * 100 / limit):.1f}%", end="")
-        t_img_tensor, fashion_item = dataset[i]
-
-        # # topsとか、bottomsのくくりが異なればはじく
-        # if category != fashion_item.get_category():
-        #     continue
+        fashion_item = dataset[i]
+        t_img_tensor = fashion_item.img_tensor
 
         # 同じアイテムが入ってると寒いのではじく
         heap_ids = [i[1].item_id for i in heap]
