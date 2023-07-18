@@ -7,21 +7,24 @@ import heapq
 from fashion_class.ImageStruct import ImageStruct
 
 class CapsuleWardrobe():
-    def __init__(self, initial_items: dict[str, list[FashionItem]], required_item: dict[str, list[FashionItem]] = None, max_length=4):
-        self.tops = initial_items["tops"]
-        self.bottoms = initial_items["bottoms"]
-        self.shoes = initial_items["shoes"]
+    def __init__(self, initial_items: dict[str, list[FashionItem]] = None, required_item: dict[str, list[FashionItem]] = None, max_length=4):
+        if initial_items:
+            self.tops = initial_items["tops"]
+            self.bottoms = initial_items["bottoms"]
+            self.shoes = initial_items["shoes"]
+
+        if required_item:
+            self.required_tops = required_item["tops"]
+            self.required_bottoms = required_item["bottoms"]
+            self.required_shoes = required_item["shoes"]
+
         self.coordinates = []
         self.score = 0
         self.c_weight = 1
         self.v_weight = 1
         self.item_cache_size = 10
         self.max_length = max_length
-        if required_item:
-            self.required_tops = required_item["tops"]
-            self.required_bottoms = required_item["bottoms"]
-            self.required_shoes = required_item["shoes"]
-
+        
     def calc_self_cw_compatibility(self):
         self.create_coordinates()
         score = 0
@@ -30,6 +33,12 @@ class CapsuleWardrobe():
         self.score = score
         return self.score
 
+    def calc_self_cw_versatility(self) -> int:
+        score = 0
+        for items in [self.tops, self.bottoms, self.shoes]:
+            covered_cateogory = {[i.get_cover_category() for i in items]}
+            score += len(covered_cateogory)
+        return score
 
     def create_coordinates(self):
         coordinates: list[Coordinate] = []
@@ -48,6 +57,7 @@ class CapsuleWardrobe():
         self.optimize_bottoms(dataset.bottoms)
         self.optimize_shoes(dataset.shoes)
         score = self.calc_self_cw_compatibility()
+        self.score = score
         # TODO
         return score - pre_score
     
@@ -61,7 +71,7 @@ class CapsuleWardrobe():
             for t in dataset:
                 items["tops"] = [t]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility(self.tops + self.required_tops, t)
+                versatility = self.calc_versatility_increase(self.tops + self.required_tops, t)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 heapq.heappush(heap, (score, t))
                 if len(heap) > self.item_cache_size:
@@ -81,7 +91,7 @@ class CapsuleWardrobe():
             for b in dataset:
                 items["bottoms"] = [b]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility(self.bottoms + self.required_bottoms, b)
+                versatility = self.calc_versatility_increase(self.bottoms + self.required_bottoms, b)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 heapq.heappush(heap, (score, b))
                 if len(heap) > self.item_cache_size:
@@ -98,7 +108,7 @@ class CapsuleWardrobe():
             for s in dataset:
                 items["shoes"] = [s]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility(self.shoes + self.required_shoes, s)
+                versatility = self.calc_versatility_increase(self.shoes + self.required_shoes, s)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 
                 heapq.heappush(heap, (score, s))
@@ -114,7 +124,7 @@ class CapsuleWardrobe():
                     score += Coordinate(t, b, s).get_compatibility()
         return score
     
-    def calc_versatility(self, items: list[FashionItem], new_item: FashionItem):
+    def calc_versatility_increase(self, items: list[FashionItem], new_item: FashionItem):
         covered_cateogory = {[i.get_cover_category() for i in items]}
         pre_score = len(covered_cateogory)
         covered_cateogory.add(new_item.get_category)
