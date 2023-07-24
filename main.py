@@ -4,7 +4,7 @@ from embedding_word import get_embedding_word
 from fashion_class.FashionItem import FashionItem
 from fashion_class.ImageStruct import ImageStruct
 from get_caption_model import get_caption_model
-from search_items_from_caption_embedding import search_items_from_caption_embedding
+from search_items import search_items_from_caption_embedding
 
 
 # modelを定義

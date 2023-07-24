@@ -12,7 +12,7 @@ from fashion_class.ImageStruct import ImageStruct
 """
 def search_items_from_caption_embedding(word, dataset: list[FashionItem],  limit=10000)-> list[FashionItem]:
     heap = []
-    for i in range(limit):
+    for i in range(min(len(dataset), limit)):
         if i % 100 == 0:
             progress = i // (limit // 10)
             pro_bar = "=" * progress + ' ' * (10 - progress)

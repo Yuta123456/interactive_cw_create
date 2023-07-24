@@ -3,3 +3,4 @@ resnet50_tensor.pt
 *.pyc
 *.pth
 data/*
+*.bin

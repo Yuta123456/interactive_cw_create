@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
-from fashion_class.CapsuleWardrobe import CapsuleWardrobe
+from fashion_class.CapsuleWardrobeClass import CapsuleWardrobe
 
 from fashion_class.FashionItem import FashionItem
 

@@ -1,5 +1,5 @@
 from fashion_class.FashionItem import FashionItem
-from fashion_class.CapsuleWardrobe import CapsuleWardrobe
+from fashion_class.CapsuleWardrobeClass import CapsuleWardrobe
 from fashion_class.ImageStruct import ImageStruct
 import torch
 

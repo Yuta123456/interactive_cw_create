@@ -54,8 +54,9 @@ class FashionItem():
         self.category = self.item_info["category x color"]
         self.cover_category = None
     
-    def get_category(self):
-        garment = self.category.split(' × ')[0]
+    def get_category(self, garment = None):
+        if garment == None:
+            garment = self.category.split(' × ')[0]
         if garment in ["ジャケット", "トップス", "コート", "ニット", "タンクトップ", "ブラウス", "Tシャツ", "カーディガン", "ダウンジャケット", "パーカー"]:
             return "tops"
             # , "ショートパンツ"入れ忘れた
@@ -81,4 +82,13 @@ class FashionItem():
         label = torch.argmin(distances).item()
         self.cover_category = label
         return label
-
+    def __eq__(self, other):
+        return True
+    def __lt__(self, other):
+        return True
+    def __gt__(self, other):
+        return True
+    def __le__(self, other):
+        return True
+    def __ge__(self, other):
+        return True

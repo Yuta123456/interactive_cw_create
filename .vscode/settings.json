@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./fashion_class"
+    ]
+}

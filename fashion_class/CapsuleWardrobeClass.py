@@ -36,7 +36,7 @@ class CapsuleWardrobe():
     def calc_self_cw_versatility(self) -> int:
         score = 0
         for items in [self.tops, self.bottoms, self.shoes]:
-            covered_cateogory = {[i.get_cover_category() for i in items]}
+            covered_cateogory = set([i.get_cover_category() for i in items])
             score += len(covered_cateogory)
         return score
 
@@ -62,59 +62,62 @@ class CapsuleWardrobe():
         return score - pre_score
     
     def optimize_tops(self, dataset :list[FashionItem]):
-        self.tops = self.required_tops
+        self.tops = []
         heap = []
         items = {}
-        items["bottoms"] = self.bottoms + self.required_bottoms
-        items["shoes"] = self.shoes + self.required_shoes
+        items["bottoms"] = self.get_bottoms()
+        items["shoes"] = self.get_shoes()
         for _ in range(self.max_length - len(self.required_tops)):
             for t in dataset:
                 items["tops"] = [t]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility_increase(self.tops + self.required_tops, t)
+                versatility = self.calc_versatility_increase(self.get_tops(), t)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 heapq.heappush(heap, (score, t))
                 if len(heap) > self.item_cache_size:
                     heapq.heappop(heap)
             # ここはheapの最大値を持ってくる必要がある
             self.tops.append(max(heap, key=lambda x: x[0])[1])
-        
+        assert len(self.get_tops()) == self.max_length
     
         
     def optimize_bottoms(self, dataset):
-        self.bottoms = self.required_bottoms
+        self.bottoms = []
         heap = []
         items = {}
-        items["tops"] = self.tops + self.required_tops
-        items["shoes"] = self.shoes + self.required_shoes
+        items["tops"] = self.get_tops()
+        items["shoes"] = self.get_shoes()
         for _ in range(self.max_length - len(self.required_bottoms)):
             for b in dataset:
                 items["bottoms"] = [b]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility_increase(self.bottoms + self.required_bottoms, b)
+                versatility = self.calc_versatility_increase(self.get_bottoms(), b)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 heapq.heappush(heap, (score, b))
                 if len(heap) > self.item_cache_size:
                     heapq.heappop(heap)
             self.bottoms.append(max(heap, key=lambda x: x[0])[1])
+        assert len(self.get_bottoms()) == self.max_length
 
     def optimize_shoes(self, dataset):
-        self.shoes = self.required_shoes
+        self.shoes = []
         heap = []
         items = {}
-        items["tops"] = self.tops + self.required_tops
-        items["bottoms"] = self.bottoms + self.required_bottoms
+        items["tops"] = self.get_tops()
+        items["bottoms"] = self.get_bottoms()
         for _ in range(self.max_length - len(self.required_shoes)):
             for s in dataset:
                 items["shoes"] = [s]
                 compatibility = self.calc_compatibility_increase(items)
-                versatility = self.calc_versatility_increase(self.shoes + self.required_shoes, s)
+                versatility = self.calc_versatility_increase(self.get_shoes(), s)
                 score = self.c_weight * compatibility + self.v_weight * versatility
                 
                 heapq.heappush(heap, (score, s))
                 if len(heap) > self.item_cache_size:
                     heapq.heappop(heap)
             self.shoes.append(max(heap, key=lambda x: x[0])[1])
+
+        assert len(self.get_shoes()) == self.max_length
 
     def calc_compatibility_increase(self, items):
         score = 0
@@ -125,7 +128,7 @@ class CapsuleWardrobe():
         return score
     
     def calc_versatility_increase(self, items: list[FashionItem], new_item: FashionItem):
-        covered_cateogory = {[i.get_cover_category() for i in items]}
+        covered_cateogory = set([i.get_cover_category() for i in items])
         pre_score = len(covered_cateogory)
         covered_cateogory.add(new_item.get_category)
 
