@@ -29,7 +29,8 @@ class CapsuleWardrobe():
             self.required_shoes = required_item["shoes"]
 
         self.coordinates = []
-        self.score = 0
+        # self.compatibility_score = 0
+        # self.versatility_sco
         self.c_weight = 1
         self.v_weight = 1
         self.item_cache_size = 10
@@ -40,28 +41,27 @@ class CapsuleWardrobe():
         score = 0
         for c in self.coordinates:
             score += c.get_compatibility()
-        self.score = score
-        return self.score
+        return score
 
     def calc_self_cw_versatility(self) -> int:
         score = 0
-        for items in [self.tops, self.bottoms, self.shoes]:
+        for items in [self.get_tops(), self.get_bottoms(), self.get_shoes()]:
             covered_cateogory = set(list(chain.from_iterable([i.get_cover_category() for i in items])))
             score += len(covered_cateogory)
         return score / (self.max_length * REGULER_VERSATILITY_SCORE)
 
     def create_coordinates(self):
         coordinates: list[Coordinate] = []
-        for t in self.tops + self.required_tops:
-            for b in self.bottoms + self.required_bottoms:
-                for s in self.shoes + self.required_shoes:
+        for t in self.get_tops():
+            for b in self.get_bottoms():
+                for s in self.get_shoes():
                     coordinate = Coordinate(t, b, s)
                     coordinates.append(coordinate)
         self.coordinates = coordinates
         return self.coordinates
 
     def optimize(self, dataset: ImageStruct):
-        pre_score = self.score
+        pre_score = self.calc_self_cw_compatibility() + self.calc_self_cw_versatility()
 
         self.optimize_tops(dataset.tops)
         self.optimize_bottoms(dataset.bottoms)
@@ -69,7 +69,6 @@ class CapsuleWardrobe():
         c, v = self.calc_self_cw_compatibility() / pow(self.max_length, LAYER),  self.calc_self_cw_versatility() / LAYER
         print(c, v)
         score = c + v
-        self.score = score
         # TODO
         return score - pre_score
     
@@ -107,8 +106,6 @@ class CapsuleWardrobe():
             for b in dataset:
                 if b.item_id in [i.item_id for i in self.get_bottoms()]:
                     continue
-                # if b.item_id == 9995388:
-                #     print("hoge", [i.item_id for i in self.get_bottoms()])
                 items["bottoms"] = [b]
                 compatibility = self.calc_compatibility_increase(items)
                 versatility = self.calc_versatility_increase(self.get_bottoms(), b)
@@ -160,6 +157,9 @@ class CapsuleWardrobe():
     def show_images(self):
         # TODO: implements
         return
+
+    def get_score(self):
+        return self.calc_self_cw_versatility() + self.calc_self_cw_compatibility()
 
     def get_tops(self):
         return self.required_tops + self.tops

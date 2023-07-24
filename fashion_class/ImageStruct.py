@@ -5,11 +5,12 @@ from category import get_image_category
 import torch
 
 from fashion_class.FashionItem import FashionItem
-
+NUM_ITEMS = 1270388
 class ImageStruct():
     def __init__(self, annotation_file, tensor_file, init_item_length = 3000):
-        self.annotations = pd.read_csv(annotation_file)
-        self.img_tensors = torch.load(tensor_file)
+        selected_indices = random.sample(range(NUM_ITEMS), init_item_length)  # init_item_length個だけランダムにインデックスを選択
+        self.annotations = pd.read_csv(annotation_file).iloc[selected_indices]
+        self.img_tensors = torch.load(tensor_file)[selected_indices]
         self.tops: list[FashionItem] = []
         self.bottoms: list[FashionItem] = []
         self.shoes: list[FashionItem] = []
@@ -18,14 +19,13 @@ class ImageStruct():
             if i % 10 == 0:
                 progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
                 print(f'\r【{progress}】', end='')
-            item = self.get(random.randint(0, len(self)))[1]
+            item = self.get(i)
             if item.get_category() == "tops":
                 self.tops.append(item)
             if item.get_category() == "bottoms":
                 self.bottoms.append(item)
             if item.get_category() == "shoes":
                 self.shoes.append(item)
-        
     def __len__(self):
         return len(self.annotations)
 
