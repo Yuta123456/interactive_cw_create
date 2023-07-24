@@ -1,5 +1,5 @@
 from fashion_class.FashionItem import FashionItem
-from fashion_class.CapsuleWardrobeClass import CapsuleWardrobe
+from fashion_class.CapsuleWardrobeClass import LAYER, REGULER_VERSATILITY_SCORE, CapsuleWardrobe
 from fashion_class.ImageStruct import ImageStruct
 import torch
 import copy
@@ -44,13 +44,22 @@ def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: I
         same_layer = cw.get_shoes()
 
     score = (0, None)
-    for item in alternate_item_candidate:
-        distance = torch.dist(item.img_tensor, user_dislike_item.img_tensor, p=2)
+    # a = [i.img_tensor for i in alternate_item_candidate]
+    item_vecters = torch.stack([i.img_tensor for i in alternate_item_candidate])
+    dislike_item_vecter = user_dislike_item.img_tensor.unsqueeze(0).expand_as(item_vecters)
+    dists = torch.norm(item_vecters - dislike_item_vecter, dim=1)
+    item_ids = [i.item_id for i in same_layer]
+    for i, item in enumerate(alternate_item_candidate):
+        if item.item_id in item_ids:
+            continue
+        distance = dists[i]
+        print(distance)
         items[kind] = [item]
-        c = cw.calc_compatibility_increase(items)
-        v = cw.calc_versatility_increase(same_layer, item)
+        c = cw.calc_compatibility_increase(items) / pow(cw.max_length * LAYER - 1)
+        v = cw.calc_versatility_increase(same_layer, item) / REGULER_VERSATILITY_SCORE
         # TODO: 重みづけ
         if score[0] < distance + c + v:
+            print(distance, c, v)
             score = (distance + c + v, item)
     return score[1]
 
@@ -68,11 +77,14 @@ def change_item_recommandation(cw: CapsuleWardrobe):
         'shoes': None
     }
 
-    for k, category_list in zip(['tops', 'bottoms', 'shoes'], [cw.tops, cw.bottoms, cw.shoes]):
+    for k, item_list in zip(['tops', 'bottoms', 'shoes'], [cw.get_tops(), cw.get_bottoms(), cw.get_shoes()]):
         worst_item_score = (10e10, None)
-        for i, _ in enumerate(category_list):
-            copy_items = initial_items.copy()
-            copy_items[k].pop(i)
+        for i, _ in enumerate(item_list):
+            copy_items = copy.deepcopy(initial_items)
+            try:
+                copy_items[k].pop(i)
+            except Exception:
+                print(copy_items, k, i)
             cw = CapsuleWardrobe(initial_items=copy_items)
             cw_score = cw.calc_self_cw_compatibility() + cw.calc_self_cw_versatility()
             if worst_item_score[0] > cw_score:
