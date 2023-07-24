@@ -41,10 +41,6 @@ def create_fashion_items_image(fashion_items: list[FashionItem]):
         draw.text((text_x, text_y), str(i+1), font=text_font, fill=text_color)
     return input_image
 
-
-
-
-
 def create_cw_image(cw: CapsuleWardrobe):
     images = []
 

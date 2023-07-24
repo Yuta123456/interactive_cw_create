@@ -2,15 +2,20 @@ from fashion_class.FashionItem import FashionItem
 from fashion_class.CapsuleWardrobeClass import CapsuleWardrobe
 from fashion_class.ImageStruct import ImageStruct
 import torch
-
+import copy
 def create_cw(required_item: dict[str, list[FashionItem]], dataset, initial_items: dict[str, list[FashionItem]]=None, eps=1e-2, max_length=4):
     cw = CapsuleWardrobe(initial_items, required_item, max_length=max_length)
     increase = eps + 1
     roop = 0
+    pre_cw = copy.deepcopy(cw)
     while increase > eps:
         # ここ遅い。topsとかカテゴリごとに、キャッシュしてあげたほうがいい。
         increase = cw.optimize(dataset)
+        pre_cw = copy.deepcopy(cw)
         print(f"{roop}回目 増加分: {increase}")
+        if increase < 0:
+            print('ロールバックします')
+            cw = pre_cw
     return cw
 
 def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: ImageStruct):

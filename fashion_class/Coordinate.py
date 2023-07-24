@@ -11,7 +11,7 @@ with open('D:/M1/fashion/optimization/data/tops_count.json', 'r', encoding='shif
 # with open('../data/shoes_count.json', 'r', encoding='shift-jis') as f:
 #     shoes_compatibility = json.load(f)
 
-
+REGULAR_SCORE = 14525
 class Coordinate():
     def __init__(self, tops: FashionItem, bottoms: FashionItem, shoes: FashionItem):
         self.tops = tops
@@ -94,7 +94,7 @@ class Coordinate():
             compatibility += tops_compatibility[self.bottoms.category][self.shoes.category][self.tops.category]
         except KeyError:
             pass
-        return compatibility
+        return compatibility / REGULAR_SCORE
 
     def __eq__(self, other):
         return True
