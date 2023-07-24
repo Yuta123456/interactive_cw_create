@@ -1,13 +1,13 @@
 
 import random
 from fashion_class.Coordinate import Coordinate
-from fashion_class.FashionItem import FashionItem
+from fashion_class.FashionItem import NEAREST_CATEGORY, FashionItem
 import heapq
 from itertools import chain
 from fashion_class.ImageStruct import ImageStruct
 
 # center_tensorは300クラスに分類されている
-REGULER_VERSATILITY_SCORE = 4
+# REGULER_VERSATILITY_SCORE = 4
 LAYER = 3
 class CapsuleWardrobe():
     def __init__(self, initial_items: dict[str, list[FashionItem]] = None, required_item: dict[str, list[FashionItem]] = None, max_length=4):
@@ -41,14 +41,14 @@ class CapsuleWardrobe():
         score = 0
         for c in self.coordinates:
             score += c.get_compatibility()
-        return score
+        return score / pow(self.max_length, LAYER)
 
     def calc_self_cw_versatility(self) -> int:
         score = 0
         for items in [self.get_tops(), self.get_bottoms(), self.get_shoes()]:
             covered_cateogory = set(list(chain.from_iterable([i.get_cover_category() for i in items])))
             score += len(covered_cateogory)
-        return score / (self.max_length * REGULER_VERSATILITY_SCORE)
+        return score / (self.max_length * NEAREST_CATEGORY)
 
     def create_coordinates(self):
         coordinates: list[Coordinate] = []
@@ -66,8 +66,7 @@ class CapsuleWardrobe():
         self.optimize_tops(dataset.tops)
         self.optimize_bottoms(dataset.bottoms)
         self.optimize_shoes(dataset.shoes)
-        c, v = self.calc_self_cw_compatibility() / pow(self.max_length, LAYER),  self.calc_self_cw_versatility() / LAYER
-        print(c, v)
+        c, v = self.calc_self_cw_compatibility() ,self.calc_self_cw_versatility()
         score = c + v
         # TODO
         return score - pre_score
@@ -145,14 +144,14 @@ class CapsuleWardrobe():
             for b in items["bottoms"]:
                 for s in items["shoes"]:
                     score += Coordinate(t, b, s).get_compatibility()
-        return score
+        return score / pow(self.max_length, LAYER - 1)
     
     def calc_versatility_increase(self, items: list[FashionItem], new_item: FashionItem):
         covered_cateogory = set(list(chain.from_iterable([i.get_cover_category() for i in items])))
         pre_score = len(covered_cateogory)
-        covered_cateogory.add(new_item.get_category())
+        covered_cateogory = covered_cateogory.union(set(new_item.get_cover_category()))
 
-        return len(covered_cateogory) - pre_score
+        return (len(covered_cateogory) - pre_score) / NEAREST_CATEGORY
 
     def show_images(self):
         # TODO: implements

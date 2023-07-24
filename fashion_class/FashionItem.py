@@ -28,7 +28,7 @@ class FashionItem():
         
         return "others"
     
-    def get_cover_category(self) -> int:
+    def get_cover_category(self) -> list[int]:
         # cluster_tensors に対して距離を図り、一番近いもののラベルを返す
         if self.cover_category:
             return self.cover_category

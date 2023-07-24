@@ -19,7 +19,7 @@ class ImageStruct():
             if i % 10 == 0:
                 progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
                 print(f'\r【{progress}】', end='')
-            item = self.get(i)
+            tensor, item = self.get(i)
             if item.get_category() == "tops":
                 self.tops.append(item)
             if item.get_category() == "bottoms":
