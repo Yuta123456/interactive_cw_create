@@ -53,9 +53,8 @@ def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: I
         if item.item_id in item_ids:
             continue
         distance = dists[i]
-        print(distance)
         items[kind] = [item]
-        c = cw.calc_compatibility_increase(items) / pow(cw.max_length * LAYER - 1)
+        c = cw.calc_compatibility_increase(items) / pow(cw.max_length, LAYER - 1)
         v = cw.calc_versatility_increase(same_layer, item) / REGULER_VERSATILITY_SCORE
         # TODO: 重みづけ
         if score[0] < distance + c + v:
@@ -81,10 +80,7 @@ def change_item_recommandation(cw: CapsuleWardrobe):
         worst_item_score = (10e10, None)
         for i, _ in enumerate(item_list):
             copy_items = copy.deepcopy(initial_items)
-            try:
-                copy_items[k].pop(i)
-            except Exception:
-                print(copy_items, k, i)
+            copy_items[k].pop(i)
             cw = CapsuleWardrobe(initial_items=copy_items)
             cw_score = cw.calc_self_cw_compatibility() + cw.calc_self_cw_versatility()
             if worst_item_score[0] > cw_score:
