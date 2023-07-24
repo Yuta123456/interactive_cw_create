@@ -8,9 +8,9 @@ def create_cw(required_item: dict[str, list[FashionItem]], dataset, initial_item
     increase = eps + 1
     roop = 0
     while increase > eps:
-        print(f"{roop}回目 増加分: {increase}")
         # ここ遅い。topsとかカテゴリごとに、キャッシュしてあげたほうがいい。
         increase = cw.optimize(dataset)
+        print(f"{roop}回目 増加分: {increase}")
     return cw
 
 def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: ImageStruct):
