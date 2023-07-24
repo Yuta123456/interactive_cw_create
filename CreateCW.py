@@ -22,31 +22,31 @@ def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: I
     user_dislike_item = None
     alternate_item_candidate = []
     items = {
-        'tops': cw.tops,
-        'bottoms': cw.bottoms,
-        'shoes': cw.shoes
+        'tops': cw.get_tops(),
+        'bottoms': cw.get_bottoms(),
+        'shoes': cw.get_shoes()
     }
     same_layer = []
     if kind == 'tops':
         alternate_item_candidate = dataset.get_tops()
-        user_dislike_item = cw.tops[index]
+        user_dislike_item = cw.get_tops()[index]
         items['tops'] = []
-        same_layer = cw.tops
+        same_layer = cw.get_tops()
     elif kind == 'bottoms':
         alternate_item_candidate = dataset.get_bottoms()
-        user_dislike_item = cw.bottoms[index]
+        user_dislike_item = cw.get_bottoms()[index]
         items['bottoms'] = []
-        same_layer = cw.bottoms
+        same_layer = cw.get_bottoms()
     elif kind == 'shoes':
         alternate_item_candidate = dataset.get_shoes()
-        user_dislike_item = cw.shoes[index]
+        user_dislike_item = cw.get_shoes()[index]
         items['shoes'] = []
-        same_layer = cw.shoes
+        same_layer = cw.get_shoes()
 
     score = (0, None)
     for item in alternate_item_candidate:
         distance = torch.dist(item.img_tensor, user_dislike_item.img_tensor, p=2)
-        items[kind] = item
+        items[kind] = [item]
         c = cw.calc_compatibility_increase(items)
         v = cw.calc_versatility_increase(same_layer, item)
         # TODO: 重みづけ
@@ -58,9 +58,9 @@ def change_item_recommandation(cw: CapsuleWardrobe):
     # 全てのアイテムが一つ多い
     # 一番最後に推薦するアイテムが入っている
     initial_items = {
-        'tops': cw.tops,
-        'bottoms': cw.bottoms,
-        'shoes': cw.shoes
+        'tops': cw.get_tops(),
+        'bottoms':cw.get_bottoms(),
+        'shoes':cw.get_shoes()
     }
     remove_item_indexes = {
         'tops':None, 

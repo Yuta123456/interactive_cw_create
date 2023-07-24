@@ -11,6 +11,13 @@ REGULER_VERSATILITY_SCORE = 4
 LAYER = 3
 class CapsuleWardrobe():
     def __init__(self, initial_items: dict[str, list[FashionItem]] = None, required_item: dict[str, list[FashionItem]] = None, max_length=4):
+        self.tops = []
+        self.bottoms = []
+        self.shoes = []
+        self.required_tops = []
+        self.required_bottoms = []
+        self.required_shoes = []
+
         if initial_items:
             self.tops = initial_items["tops"]
             self.bottoms = initial_items["bottoms"]

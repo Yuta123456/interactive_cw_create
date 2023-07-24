@@ -1,3 +1,4 @@
+from PIL import Image, ImageDraw, ImageFont
 import torch
 from category import get_image_info
 
@@ -44,6 +45,20 @@ class FashionItem():
         label: list[int] = k_min_indices.tolist()
         self.cover_category = label
         return label
+
+    def create_image(self):
+        # 画像を読み込んでリストに追加する
+        image = Image.open(self.img_path)
+
+        input_image = Image.new('RGB', (image.width, image.height + 30), (255, 255, 255))
+
+        input_image.paste(image, (0, 30))
+
+        text_color = (0, 0, 0)  # テキストの色を黒に設定
+        text_font = ImageFont.truetype("arial.ttf", 16, encoding='utf-8')  # テキストのフォントとサイズを設定
+        draw = ImageDraw.Draw(input_image)
+        draw.text((30, 15), 'item', font=text_font, fill=text_color)
+        return input_image
 
     def __eq__(self, other):
         return True
