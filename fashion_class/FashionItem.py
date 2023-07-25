@@ -4,7 +4,8 @@ from category import get_image_info
 
 
 cluster_tensors = torch.load('D:/M1/fashion/optimization/data/center_tensors.pt')
-NEAREST_CATEGORY = 5
+# 
+NEAREST_CATEGORY = 30
 class FashionItem():
     def __init__(self, img_path: str, img_tensor):
         self.img_path = img_path
