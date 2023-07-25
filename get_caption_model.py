@@ -19,8 +19,8 @@ def get_caption_model():
     else:
         device = torch.device("cpu")  # CPUデバイスを取得
 
-    
-    model_name =  './model/model_caption_2023-07-08.pth'
+    # D:\M1\fashion\optimization\model
+    model_name =  'D:/M1/fashion/optimization/model/model_caption_2023-07-08.pth'
     caption_model = CaptionEncoder().to(device)
     caption_model.load_state_dict(torch.load(model_name))
     caption_model.eval()

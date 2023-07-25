@@ -12,11 +12,11 @@ def create_cw(required_item: dict[str, list[FashionItem]], dataset, initial_item
         # ここ遅い。topsとかカテゴリごとに、キャッシュしてあげたほうがいい。
         increase = cw.optimize(dataset)
         pre_cw = copy.deepcopy(cw)
-        print(f"{roop}回目 増加分: {increase}")
+        # print(f"{roop}回目 増加分: {increase}")
         if increase < 0:
-            print('ロールバックします')
+            # print('ロールバックします')
             cw = pre_cw
-    print(f'cwのスコア: {cw.get_score()}')
+    # print(f'cwのスコア: {cw.get_score()}')
     return cw
 
 def search_alternate_item(cw: CapsuleWardrobe, kind: str, index: int, dataset: ImageStruct):
