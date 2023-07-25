@@ -48,7 +48,7 @@ class CapsuleWardrobe():
         for items in [self.get_tops(), self.get_bottoms(), self.get_shoes()]:
             covered_cateogory = set(list(chain.from_iterable([i.get_cover_category() for i in items])))
             score += len(covered_cateogory)
-        return score / (self.max_length * NEAREST_CATEGORY)
+        return score / (self.max_length * NEAREST_CATEGORY * 3)
 
     def create_coordinates(self):
         coordinates: list[Coordinate] = []
