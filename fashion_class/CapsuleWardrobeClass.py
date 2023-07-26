@@ -66,7 +66,7 @@ class CapsuleWardrobe():
         self.optimize_tops(dataset.tops)
         self.optimize_bottoms(dataset.bottoms)
         self.optimize_shoes(dataset.shoes)
-        c, v = self.calc_self_cw_compatibility() ,self.calc_self_cw_versatility()
+        c, v = self.calc_self_cw_compatibility(), self.calc_self_cw_versatility()
         score = c + v
         # TODO
         return score - pre_score

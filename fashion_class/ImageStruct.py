@@ -16,10 +16,10 @@ class ImageStruct():
         self.shoes: list[FashionItem] = []
         
         for i in range(init_item_length):
-            if i % 10 == 0:
-                progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
-                print(f'\r【{progress}】', end='')
-            tensor, item = self.get(i)
+            # if i % 10 == 0:
+            #     progress = '=' * (i * 100 // init_item_length) + ' ' * (100 - (i * 100 // init_item_length))
+            #     print(f'\r【{progress}】', end='')
+            _, item = self.get(i)
             if item.get_category() == "tops":
                 self.tops.append(item)
             if item.get_category() == "bottoms":
