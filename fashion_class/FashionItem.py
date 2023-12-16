@@ -1,34 +1,53 @@
 from PIL import Image, ImageDraw, ImageFont
 import torch
 from category import get_image_info
+import sys
 
+sys.path.append("d:/M1/fashion")
+from lda_model.preProcessing.preprocessing import preprocessing
 
-cluster_tensors = torch.load('D:/M1/fashion/optimization/data/center_tensors.pt')
-# 
+cluster_tensors = torch.load("D:/M1/fashion/optimization/data/center_tensors.pt")
+#
 NEAREST_CATEGORY = 50
-class FashionItem():
+
+
+class FashionItem:
     def __init__(self, img_path: str, img_tensor):
         self.img_path = img_path
         self.img_tensor = img_tensor
         self.item_info = get_image_info(img_path)
         self.item_id = self.item_info["itemId"]
         self.category = self.item_info["category x color"]
+        caption = preprocessing(self.item_info["expressions"][0], debug=False)
+        caption = caption.replace(",", "、")
+        self.expressions = caption
         self.cover_category = None
-    
-    def get_category(self, garment = None):
+
+    def get_category(self, garment=None):
         if garment == None:
-            garment = self.category.split(' × ')[0]
-        if garment in ["ジャケット", "トップス", "コート", "ニット", "タンクトップ", "ブラウス", "Tシャツ", "カーディガン", "ダウンジャケット", "パーカー"]:
+            garment = self.category.split(" × ")[0]
+        if garment in [
+            "ジャケット",
+            "トップス",
+            "コート",
+            "ニット",
+            "タンクトップ",
+            "ブラウス",
+            "Tシャツ",
+            "カーディガン",
+            "ダウンジャケット",
+            "パーカー",
+        ]:
             return "tops"
             # , "ショートパンツ"入れ忘れた
-        if garment in ['スカート', 'ロングスカート', "ロングパンツ"]:
+        if garment in ["スカート", "ロングスカート", "ロングパンツ"]:
             return "bottoms"
-        
+
         if garment in ["ブーツ", "パンプス", "スニーカー", "靴", "サンダル"]:
             return "shoes"
-        
+
         return "others"
-    
+
     def get_cover_category(self) -> list[int]:
         # cluster_tensors に対して距離を図り、一番近いもののラベルを返す
         if self.cover_category:
@@ -51,23 +70,31 @@ class FashionItem():
         # 画像を読み込んでリストに追加する
         image = Image.open(self.img_path)
 
-        input_image = Image.new('RGB', (image.width, image.height + 30), (255, 255, 255))
+        input_image = Image.new(
+            "RGB", (image.width, image.height + 30), (255, 255, 255)
+        )
 
         input_image.paste(image, (0, 30))
 
         text_color = (0, 0, 0)  # テキストの色を黒に設定
-        text_font = ImageFont.truetype("arial.ttf", 16, encoding='utf-8')  # テキストのフォントとサイズを設定
+        text_font = ImageFont.truetype(
+            "arial.ttf", 16, encoding="utf-8"
+        )  # テキストのフォントとサイズを設定
         draw = ImageDraw.Draw(input_image)
-        draw.text((30, 15), 'item', font=text_font, fill=text_color)
+        draw.text((30, 15), "item", font=text_font, fill=text_color)
         return input_image
 
     def __eq__(self, other):
         return True
+
     def __lt__(self, other):
         return True
+
     def __gt__(self, other):
         return True
+
     def __le__(self, other):
         return True
+
     def __ge__(self, other):
         return True
